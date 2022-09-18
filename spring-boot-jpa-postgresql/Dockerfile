@@ -1,5 +1,9 @@
-FROM adoptopenjdk:11-jre-hotspot
-WORKDIR /usr/src/app
-EXPOSE 8080
-COPY home/target/bezkoder-0.0.1-SNAPSHOT.jar bezkoder.jar
-CMD ["java", "-jar", "bezkoder.jar"]
+FROM maven:3.5-jdk-8 AS build  
+COPY src /usr/src/app/src  
+COPY pom.xml /usr/src/app  
+RUN mvn -f /usr/src/app/pom.xml clean package
+
+FROM gcr.io/distroless/java  
+COPY --from=build /usr/src/app/target/bezkoder-1.0.0-SNAPSHOT.jar /usr/app/bezkoder-1.0.0-SNAPSHOT.jar
+EXPOSE 8080  
+ENTRYPOINT ["java","-jar","/usr/app/bezkoder-1.0.0-SNAPSHOT.jar"]
