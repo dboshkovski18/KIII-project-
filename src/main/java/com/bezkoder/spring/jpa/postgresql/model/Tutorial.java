@@ -18,6 +18,9 @@ public class Tutorial {
 
 	@Column(name = "published")
 	private boolean published;
+	
+	@Column(name = "test")
+	private boolean test;
 
 	public Tutorial() {
 
